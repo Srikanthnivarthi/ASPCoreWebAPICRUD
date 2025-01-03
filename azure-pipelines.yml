@@ -44,14 +44,14 @@ jobs:
       #     SourceFolder: '$(reactAppFolder)/build'
       #     TargetFolder: '$(outputDirectory)/react'
       #   displayName: 'Copy React App Build Files'
-      # - task: DotNetCoreCLI@2
-      #   inputs:
-      #     azureSubscription: 'Free Trial(5a30f187-782d-433d-80f9-6c99064fc497)'
-      #     command: 'restore'
-      #     projects: '$(netCoreAppFolder)/$(netCoreAppFolder).csproj'
-      #     restoreArguments: '--no-restore'
-      #     feedsToUse: 'select'
-      #   displayName: 'Restore .NET Core Web API'
+      - task: DotNetCoreCLI@2
+        inputs:
+          azureSubscription: 'Free Trial(5a30f187-782d-433d-80f9-6c99064fc497)'
+          command: 'restore'
+          projects: '$(netCoreAppFolder)/$(netCoreAppFolder).csproj'
+          # restoreArguments: '--no-restore'
+          feedsToUse: 'select'
+        displayName: 'Restore .NET Core Web API'
 
       # # Restore and build .NET Core Web API
       # - task: DotNetCoreCLI@2
