@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  name: Default # Use your self-hosted agent pool here
+  name: Neotechagentpool # Use your self-hosted agent pool here
   demands:
     - agent.os == Windows_NT
 
@@ -12,7 +12,7 @@ variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(Build.ArtifactStagingDirectory)'
   reactAppFolder: 'frontend'  # Adjust to your frontend folder name
-  netCoreAppFolder: 'api'  # Adjust to your API folder name
+  netCoreAppFolder: 'ASPCoreWebAPICRUD'  # Adjust to your API folder name
   sqlScriptsFolder: 'sql'  # Adjust to your SQL scripts folder name
 
 jobs:
