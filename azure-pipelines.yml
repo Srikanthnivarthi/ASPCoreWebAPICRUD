@@ -27,7 +27,7 @@ jobs:
       - task: UseDotNet@2
         inputs:
           packageType: 'sdk'
-          version: '3.2'
+          version: '5.x'
           installationPath: $(Agent.ToolsDirectory)/dotnet
         displayName: 'Install .NET SDK'
 
