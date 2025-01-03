@@ -6,7 +6,7 @@ trigger:
 pool:
   name: Neotechagentpool # Use your self-hosted agent pool here
   demands:
-    - agent.os == Windows_NT
+    - agent.os -equals Windows_NT
 
 variables:
   buildConfiguration: 'Release'
