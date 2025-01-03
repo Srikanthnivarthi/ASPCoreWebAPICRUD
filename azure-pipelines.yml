@@ -11,7 +11,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   outputDirectory: '$(Build.ArtifactStagingDirectory)'
-  reactAppFolder: 'frontend'  # Adjust to your frontend folder name
+  #reactAppFolder: 'frontend'  # Adjust to your frontend folder name
   netCoreAppFolder: 'ASPCoreWebAPICRUD'  # Adjust to your API folder name
   sqlScriptsFolder: 'sql'  # Adjust to your SQL scripts folder name
 
@@ -32,18 +32,18 @@ jobs:
         displayName: 'Install .NET SDK'
 
       # Build React app
-      - script: |
-          cd $(reactAppFolder)
-          npm install
-          npm run build --if-present
-        displayName: 'Build React App'
+      # - script: |
+      #     cd $(reactAppFolder)
+      #     npm install
+      #     npm run build --if-present
+      #   displayName: 'Build React App'
 
       # Publish React build to artifact staging directory
-      - task: CopyFiles@2
-        inputs:
-          SourceFolder: '$(reactAppFolder)/build'
-          TargetFolder: '$(outputDirectory)/react'
-        displayName: 'Copy React App Build Files'
+      # - task: CopyFiles@2
+      #   inputs:
+      #     SourceFolder: '$(reactAppFolder)/build'
+      #     TargetFolder: '$(outputDirectory)/react'
+      #   displayName: 'Copy React App Build Files'
 
       # Restore and build .NET Core Web API
       - task: DotNetCoreCLI@2
