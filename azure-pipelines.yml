@@ -1,0 +1,84 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  name: Default # Use your self-hosted agent pool here
+  demands:
+    - agent.os == Windows_NT
+
+variables:
+  buildConfiguration: 'Release'
+  outputDirectory: '$(Build.ArtifactStagingDirectory)'
+  reactAppFolder: 'frontend'  # Adjust to your frontend folder name
+  netCoreAppFolder: 'api'  # Adjust to your API folder name
+  sqlScriptsFolder: 'sql'  # Adjust to your SQL scripts folder name
+
+jobs:
+  - job: BuildAndPackage
+    displayName: 'Build and Package Application'
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '16.x'
+        displayName: 'Install Node.js'
+
+      - task: UseDotNet@2
+        inputs:
+          packageType: 'sdk'
+          version: '6.x'
+          installationPath: $(Agent.ToolsDirectory)/dotnet
+        displayName: 'Install .NET SDK'
+
+      # Build React app
+      - script: |
+          cd $(reactAppFolder)
+          npm install
+          npm run build --if-present
+        displayName: 'Build React App'
+
+      # Publish React build to artifact staging directory
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(reactAppFolder)/build'
+          TargetFolder: '$(outputDirectory)/react'
+        displayName: 'Copy React App Build Files'
+
+      # Restore and build .NET Core Web API
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'restore'
+          projects: '$(netCoreAppFolder)/$(netCoreAppFolder).csproj'
+        displayName: 'Restore .NET Core Web API'
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'build'
+          projects: '$(netCoreAppFolder)/$(netCoreAppFolder).csproj'
+          configuration: $(buildConfiguration)
+        displayName: 'Build .NET Core Web API'
+
+      # Publish .NET Core Web API
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'publish'
+          projects: '$(netCoreAppFolder)/$(netCoreAppFolder).csproj'
+          configuration: $(buildConfiguration)
+          output: '$(outputDirectory)/api'
+        displayName: 'Publish .NET Core Web API'
+
+      # Handle SQL Scripts (Optional - modify as needed)
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(sqlScriptsFolder)'
+          TargetFolder: '$(outputDirectory)/sql'
+        displayName: 'Copy SQL Scripts'
+
+      # Publish the artifact
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathToPublish: '$(outputDirectory)'
+          artifactName: 'drop'
+        displayName: 'Publish Build Artifacts'
+
